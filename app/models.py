@@ -3,6 +3,7 @@ from beanie import Document, Indexed
 from datetime import datetime
 from pydantic import Field
 from enum import Enum
+from typing import Optional
 
 class WidgetType(str, Enum):
     GAME = "game"
@@ -37,7 +38,7 @@ class Widget(BaseModel):
 
 class WidgetInteraction(BaseModel):
     widget_id: UUID
-    client_reference_id: Indexed(str)
+    client_reference_id: Optional[str] = None
     ref_url: str
     interaction_type: WidgetInteractionType
     interaction_data: dict
