@@ -17,7 +17,7 @@ class WidgetUpdate(BaseModel):
 
 class WidgetInteractionCreate(BaseModel):
     widget_id: UUID
-    client_refrence_id: str
+    client_reference_id: str
     ref_url: str
     interaction_type: WidgetInteractionType
     interaction_data: dict

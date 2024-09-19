@@ -37,7 +37,7 @@ class Widget(BaseModel):
 
 class WidgetInteraction(BaseModel):
     widget_id: UUID
-    client_refrence_id: Indexed(str)
+    client_reference_id: Indexed(str)
     ref_url: str
     interaction_type: WidgetInteractionType
     interaction_data: dict

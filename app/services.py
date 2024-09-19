@@ -12,8 +12,10 @@ class AuthService:
 
     async def get_current_user(self, token: str = Depends(oauth2_scheme)) -> Dict[str, Any]:
         url = f"{self.base_url}/users/me"
+
         headers = {"Authorization": f"Bearer {token}"}
-        response = await httpx.get(url, headers=headers)
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=headers)
         return self._handle_response(response)
 
     def _handle_response(self, response: httpx.Response) -> Dict[str, Any]:

@@ -2,6 +2,7 @@ import jinja2
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 from uuid import UUID
+
 from app.models import Widget, WidgetInteraction
 from app.schemas import WidgetCreate, WidgetUpdate, WidgetInteractionCreate, WidgetInteractionStats
 from typing import List, Dict
@@ -21,7 +22,7 @@ async def create_widget(widget: WidgetCreate):
 
 @protected_router.put("/widgets/{widget_id}", response_model=Widget)
 async def update_widget(widget_id: UUID, widget_update: WidgetUpdate):
-    widget = await Widget.find_one(Widget.widget_id == widget_id)
+    widget = await Widget.find_one(Widget.widget_id == UUID(widget_id))
     if not widget:
         raise HTTPException(status_code=404, detail="Widget not found")
     
@@ -48,20 +49,22 @@ async def create_widget_interaction(interaction: WidgetInteractionCreate):
     return new_interaction
 
 @public_router.get("/widgets/{widget_id}/interactions", response_model=List[WidgetInteraction])
-async def get_widget_interactions(widget_id: UUID, client_reference_id: str = None, current_user: dict = Depends(auth_service.get_current_user)):
+async def get_widget_interactions(widget_id: UUID, client_reference_id: str = None):
     widget = await Widget.find_one(Widget.widget_id == widget_id)
     if not widget:
         raise HTTPException(status_code=404, detail="Widget not found")
     
     query = {"widget_id": widget_id}
     if client_reference_id:
-        query["client_refrence_id"] = client_reference_id
+        query["client_reference_id"] = client_reference_id
     
     return await WidgetInteraction.find(query).to_list()
 
 @public_router.get("/widgets/{widget_id}/stats", response_model=WidgetInteractionStats)
-async def get_widget_interaction_stats(widget_id: UUID, days: int = 30, current_user: dict = Depends(auth_service.get_current_user)):
-    widget = await Widget.find_one(Widget.widget_id == widget_id)
+async def get_widget_interaction_stats(widget_id: UUID, days: int = 30):
+    print(widget_id)
+    print(type(widget_id))
+    widget = await Widget.find_one(Widget.widget_id == UUID(widget_id))
     if not widget:
         raise HTTPException(status_code=404, detail="Widget not found")
     
