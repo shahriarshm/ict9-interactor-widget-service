@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from uuid import UUID
 from app.models import Widget, WidgetInteraction
 from app.schemas import WidgetCreate, WidgetUpdate, WidgetInteractionCreate, WidgetInteractionStats
-from typing import List
+from typing import List, Dict
 from app.deps import verify_api_key
 from app.services import auth_service
 from datetime import datetime, timedelta
@@ -82,6 +82,26 @@ async def get_widget_interaction_stats(widget_id: UUID, days: int = 30, current_
         unique_clients=unique_clients,
         time_period_days=days
     )
+
+
+@public_router.get("/widgets/{widget_id}/unique-interactors", response_model=Dict[str, List[WidgetInteraction]])
+async def get_unique_widget_interactors(widget_id: UUID):
+    widget = await Widget.find_one(Widget.widget_id == widget_id)
+    if not widget:
+        raise HTTPException(status_code=404, detail="Widget not found")
+    
+    interactions = await WidgetInteraction.find(
+        WidgetInteraction.widget_id == widget_id
+    ).to_list()
+    
+    grouped_interactions = {}
+    for interaction in interactions:
+        client_id = interaction.client_reference_id
+        if client_id not in grouped_interactions:
+            grouped_interactions[client_id] = []
+        grouped_interactions[client_id].append(interaction)
+    
+    return grouped_interactions
 
 @public_router.get("/widgets/{widget_id}/html", response_class=HTMLResponse)
 async def get_widget_html(widget_id: UUID):
