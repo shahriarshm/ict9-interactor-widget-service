@@ -1,5 +1,5 @@
 import jinja2
-from fastapi import APIRouter, HTTPException, Depends, logger
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import HTMLResponse
 from uuid import UUID
 
