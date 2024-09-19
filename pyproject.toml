@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "widget-service"
+version = "0.1.0"
+description = ""
+authors = ["Shahriar Shariati <shahriarshm81@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.115.0"
+beanie = "^1.26.0"
+pydantic = "^2.9.2"
+pydantic-settings = "^2.5.2"
+uvicorn = "^0.30.6"
+httpx = "^0.27.2"
+jinja2 = "^3.1.4"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+flake8 = "^7.1.1"
+black = "^24.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
